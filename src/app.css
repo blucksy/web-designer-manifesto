@@ -1,0 +1,16 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.monument {
+    font-family: "Monument Grotesk";
+    font-size: 67.735px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 93%;
+    letter-spacing: -2.709px;
+}
+
+span {
+    @apply text-[#FF0A0E] hover:underline;
+}
