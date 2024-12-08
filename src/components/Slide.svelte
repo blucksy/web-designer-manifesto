@@ -6,6 +6,7 @@
   let topDiv: HTMLDivElement;
   let bottomDiv: HTMLDivElement;
   export let noteText: string;
+  let open = false;
   let height = 0;
 
   // Dynamically update the height of the bottom div
@@ -27,11 +28,16 @@
       window.removeEventListener("resize", updateHeight);
     });
   }
-
+  const closeMenu = () => {
+    topDiv.style.bottom = `0px`;
+    bottomDiv.style.top = `100vh`;
+    open = false;
+  };
   const handleClick = () => {
     // Adjust the top and bottom div positions based on click
     topDiv.style.bottom = `${height}px`;
     bottomDiv.style.top = `calc(100vh - ${height}px)`;
+    open = true;
   };
 </script>
 
@@ -45,15 +51,26 @@
     <slot></slot>
     <!-- Handle click on the span directly inside this component -->
     {#if noteText}
-      <span
-        id="de"
-        on:click={(event) => {
-          event.stopPropagation();
-          handleClick();
-        }}
-      >
-        Notes
-      </span>
+      {#if !open}
+        <span
+          id="de"
+          on:click={(event) => {
+            event.stopPropagation();
+            handleClick();
+          }}
+        >
+          Notes
+        </span>
+      {:else}
+        <span
+          id="de"
+          on:click={(event) => {
+            closeMenu();
+          }}
+        >
+          Close
+        </span>
+      {/if}
     {/if}
   </p>
 </div>
