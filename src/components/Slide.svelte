@@ -5,32 +5,13 @@
   let note: HTMLDivElement;
   let topDiv: HTMLDivElement;
   let bottomDiv: HTMLDivElement;
-  export let noteText;
-  let isOpen = false;
+  export let noteText: string;
   let height = 0;
 
-  // Update the height of the bottom div dynamically
+  // Dynamically update the height of the bottom div
   const updateHeight = () => {
-    height = note?.offsetHeight || 0;
-  };
-
-  const handleClick = (isHovering: boolean) => {
-    // Adjust the top and bottom div positions based on the hover state
-    if (isHovering) {
-      topDiv.style.bottom = `${height}px`;
-      bottomDiv.style.top = `calc(100vh - ${height}px)`;
-      // set timeout
-      setTimeout(() => {
-        isOpen = true;
-      }, 300);
-    }
-  };
-
-  const closeMenu = () => {
-    if (isOpen) {
-      topDiv.style.bottom = "0px";
-      bottomDiv.style.top = "100vh";
-      isOpen = false;
+    if (note) {
+      height = note.offsetHeight || 0;
     }
   };
 
@@ -38,21 +19,23 @@
   if (browser) {
     window.addEventListener("resize", updateHeight);
 
-    onMount(() => updateHeight());
-    onDestroy(() => window.removeEventListener("resize", updateHeight));
+    onMount(() => {
+      updateHeight();
+    });
 
-    document
-      .querySelector("span[id='de']")
-      .addEventListener("click", () => handleClick(true));
-
-    document
-      .querySelector("div[id='topDiv']")
-      .addEventListener("click", () => closeMenu());
+    onDestroy(() => {
+      window.removeEventListener("resize", updateHeight);
+    });
   }
+
+  const handleClick = () => {
+    // Adjust the top and bottom div positions based on click
+    topDiv.style.bottom = `${height}px`;
+    bottomDiv.style.top = `calc(100vh - ${height}px)`;
+  };
 </script>
 
 <!-- Top div -->
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   bind:this={topDiv}
   id="topDiv"
@@ -60,9 +43,22 @@
 >
   <p class="monument w-[87.5%]">
     <slot></slot>
+    <!-- Handle click on the span directly inside this component -->
+    {#if noteText}
+      <span
+        id="de"
+        on:click={(event) => {
+          event.stopPropagation();
+          handleClick();
+        }}
+      >
+        Notes
+      </span>
+    {/if}
   </p>
 </div>
 
+<!-- Bottom div -->
 <div
   bind:this={bottomDiv}
   class="absolute top-[100vh] ease-in-out duration-300 w-screen bg-[#FF0A0E]"
