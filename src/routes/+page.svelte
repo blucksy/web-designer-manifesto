@@ -1,4 +1,5 @@
 <script>
+  import { browser } from "$app/environment";
   import Slide from "../components/Slide.svelte";
   let activeIndex = 0;
 
@@ -69,13 +70,44 @@
     },
   ];
 
+  //   flash click through opacity 0 opacity 100 every half a second
+
+  if (browser) {
+    const click = document.getElementById("click");
+    setInterval(() => {
+      click.style.opacity = 0;
+      setTimeout(() => {
+        click.style.opacity = 1;
+      }, 250);
+    }, 500);
+  }
+
   function handleClick(e) {
     // Only increment activeIndex if the click is not on the span with id="de"
     if (e.target.id !== "de") {
       activeIndex = (activeIndex + 1) % slides.length;
     }
   }
+
+  function closeSplash() {
+    const splash = document.getElementById("splash");
+    splash.style.display = "none";
+  }
 </script>
+
+<div
+  on:click={(e) => closeSplash()}
+  id="splash"
+  class="h-screen w-screen bg-[#FF0A0E] justify-center flex flex-col fixed top-0 left-0 z-[9999]"
+>
+  <h1 class="monument mx-auto text-center w-2/3">Web Design Manifesto</h1>
+  <p
+    id="click"
+    class="monument !text-[38px] w-screen text-center fixed bottom-[40px]"
+  >
+    *click through*
+  </p>
+</div>
 
 <div on:click={(e) => handleClick(e)}>
   {#if slides[activeIndex].type === "component"}
