@@ -8,7 +8,8 @@
     font-style: normal;
     font-weight: 700;
     line-height: 93%;
-    letter-spacing: -2.709px;
+
+    @apply text-[32px] sm:text-[67.735px] tracking-[-1.7px] sm:tracking-[-2.709px]; 
 }
 
 span {
